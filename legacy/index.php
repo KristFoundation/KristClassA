@@ -1,42 +1,9 @@
-<!DOCTYPE ccml>
-<html>
-<head>
-<title>Krist - The ComputerCraft Currency</title>
-</head>
-<body>
-<?php $db = new SQLite3('data.db'); ?>
-<float bgcolour="cyan">
-<p width="1" colour="cyan">@</p>
-<p width="1" bgcolour="white" colour="lime">/</p>
-<p width="1" bgcolour="lime" colour="green">\</p>
-<p width="2" colour="cyan">@@</p>
-<p width="5" colour="black">KRIST</p>
-<p width="3" colour="cyan">@@@</p>
-<a href="/index.php?about" align="center" colour="black" bgcolour="blue" ulcolour="none" width="7">About</a>
-<p width="1" colour="blue">=</p>
-<a href="/index.php?richlist" align="center" colour="black" bgcolour="blue" ulcolour="none" width="9">Address</a>
-<p width="1" colour="blue">=</p>
-<a href="/index.php?chain" align="center" colour="black" bgcolour="blue" ulcolour="none" width="7">Block</a>
-<p width="1" colour="blue">=</p>
-<a href="/index.php?transfer" align="center" colour="black" bgcolour="blue" ulcolour="none" width="10">Make a</a>
-</float>
-<float bgcolour="cyan">
-<p width="1" colour="cyan">@</p>
-<p width="1" bgcolour="lime" colour="green">\</p>
-<p width="1" bgcolour="green" colour="lime">/</p>
-<p width="1" colour="cyan">@</p>
-<p width="8" colour="gray">Currency</p>
-<p width="1" colour="cyan">@</p>
-<a href="/index.php?about" align="center" colour="black" bgcolour="blue" ulcolour="none" width="7">Krist</a>
-<p width="1" colour="blue">=</p>
-<a href="/index.php?richlist" align="center" colour="black" bgcolour="blue" ulcolour="none" width="9">tools</a>
-<p width="1" colour="blue">=</p>
-<a href="/index.php?chain" align="center" colour="black" bgcolour="blue" ulcolour="none" width="7">chain</a>
-<p width="1" colour="blue">=</p>
-<a href="/index.php?transfer" align="center" colour="black" bgcolour="blue" ulcolour="none" width="10">transfer</a>
-</float>
+<?php $db = new SQLite3('data.db');?>[KSML:COAL][TITLE]Krist[/TITLE]
+[BG:WHITE][HL:CYAN] [HL:WHITE][C:LIME]/[/C][/HL][HL:LIME][C:GREEN]\[/C][/HL]  KRIST  
+[BR] [HL:LIME][C:GREEN]\[/C][/HL][HL:GREEN][C:LIME]/[/C][/HL] [C:GRAY]Node #X[/C] 
+
 <?php 
-function hextobase36($j) {
+function hextobase36($j) { //there is definitely a much better way to do this
   if ( $j <= 6 )  return "0";
   elseif ( $j <= 13 )  return "1";
   elseif ( $j <= 20 )  return "2";
@@ -95,7 +62,7 @@ $prot[$link] = "zzz";
 }
 return $v2;
 }
-if (isset($_GET['chain'])) {
+if (isset($_GET['chain'])) {die('This call has been deprecated 5/27/2015');
 if (isset($_GET['web'])) {
 
 } else {
@@ -116,7 +83,7 @@ echo '<ul class="nav nav-tabs" role="tablist">
   </ul>';
 if (strlen($_GET['explorer']) == 0) {
   echo '<table class="table table-condensed"><tr><th>Height</th><th>Hash</th><th>Miner</th><th>Value</th><th>Time</th></tr>';
-  $blocks = $db->query('SELECT * FROM blocks ORDER BY id DESC LIMIT 12');
+  $blocks = $db->query('SELECT * FROM blocks ORDER BY id DESC LIMIT 300');
   while ($block = $blocks->fetchArray()) {
     echo '<tr><td>'.$block['id'].'</td><td style="font-family: \'Lucida Console\';">'.substr($block['hash'],0,12).'<small style="color:gray;">'.substr($block['hash'],12,12).'</small></td><td style="font-family: \'Lucida Console\';"><a href="?explorer='.$block['address'].'" ulcolour="none" width="11" align="right">'.$block['address'].'</a></td><td>'.number_format($block['value'],0).' KST</td><td>'.date("Y-m-d H:i:s",$block['time']).'</td></tr>';
   }
@@ -159,7 +126,7 @@ while ($tx = $txs->fetchArray()) {
 }
 echo '</table>';
 }
-} else if (isset($_GET['v2'])) {
+} else if (isset($_GET['v2'])) {die('This call has been deprecated 5/27/2015');
 ob_end_clean(); 
 echo makeV2($_GET['v2']);
 } else if (isset($_GET['blocks'])) {
@@ -168,7 +135,7 @@ if (isset($_GET['low'])) {$lim = "18"; $ord = "hash ASC";}
 if (isset($_GET['lownonce'])) {$ord = "nonce ASC";}
 if (isset($_GET['highnonce'])) {$ord = "nonce DESC";}
 //echo '<float bgcolour="lightGray"><p width="6" align="right">Height</p><p width="13" align="right">Hash</p><p width="11" align="right">Miner</p><p width="20" align="right">Time</p></float>';
-$blocks = $db->query('SELECT * FROM blocks WHERE id > 0 ORDER BY '.$ord.' LIMIT '.$lim);
+$blocks = $db->query('SELECT * FROM blocks WHERE id > 4000 ORDER BY '.$ord.' LIMIT '.$lim);
 while ($block = $blocks->fetchArray()) {
 $blox += 1;
 if ($blox == 1 and isset($_GET['low']) == 0) echo sprintf("%08d",$block['id']);
@@ -195,7 +162,7 @@ if ($block['address'] == 'C:\Users\Bryan\Downloads\miner.py') $block['address'] 
 if ($block['address'] == '2bb037a6f') $block['address'] = "N/A(Burnt)";
 echo substr($block['address'],0,10).sprintf("%08d", $block['balance']).date("d M Y",$block['firstseen']);
 }
-} else if (isset($_GET['richlist'])) {
+} else if (isset($_GET['richlist'])) {die('This call has been deprecated 5/27/2015');
 echo '<float bgcolour="lightGray"><p width="6" align="right">Rank</p><p width="11" align="right">Address</p><p width="15" align="right">Balance</p><p width="18" align="right">First seen</p></float>';
 $addresses = $db->query('SELECT * FROM addresses ORDER BY balance DESC LIMIT 20');
 $rank = 0;
@@ -210,11 +177,12 @@ if (isset($_GET['lots'])) {$lim = 20000;} else {$lim = 32;}
 $txs = $db->query('SELECT * FROM transactions WHERE (`from` != "") ORDER BY time DESC LIMIT '.$lim);
 while ($tx = $txs->fetchArray()) {
 echo ''.date("M d H:i",$tx['time']).''.$tx['from'].$tx['to'].sprintf("%08d", abs($tx['value'])).'';
-}} else if (isset($_GET['listtx'])) {
-ob_end_clean();
+}} else if (isset($_GET['listtx'])) { ob_end_clean(); if (true) {
+
 if (isset($_GET['overview'])) {$lim = 3;} else {$lim = 15984;}
 if (strlen($_GET['listtx']) != 10) die('Error4');
 if (substr($_GET['listtx'],0,1) == 'k') {if (!ctype_alnum($_GET['listtx'])) die('Error4');} else {if (!ctype_xdigit($_GET['listtx'])) die('Error4');}
+$address = $db->query('SELECT * FROM addresses WHERE address = "'.$_GET['listtx'].'"')->fetchArray();
 $txs = $db->query('SELECT * FROM transactions WHERE (`to` = "'.$_GET['listtx'].'" OR `from` = "'.$_GET['listtx'].'") ORDER BY time DESC LIMIT '.$lim);
 $bal = 0;
 //echo '<float bgcolour="yellow"><p width="25" align="left">Address: '.$_GET['listtx'].'</p><p width="25" align="right">Balance: '.$bal.' KST</p></float>';
@@ -222,9 +190,57 @@ $bal = 0;
 while ($tx = $txs->fetchArray()) {
 if ($tx['to'] == $_GET['listtx']) {$peer = $tx['from'];$sign = '+';$colr = 'green';} else {$peer = $tx['to'];$sign = '-';$colr = 'red';}
 if (strlen($tx['from']) < 10) $peer = 'N/A(Mined)';
+if (strlen($tx['to']) < 10) $peer = 'N/A(Names)';
 echo ''.date("M d H:i",$tx['time']).''.$peer.$sign.sprintf("%08d", abs($tx['value'])).'';
 if ($sign == '+') {$bal -= $tx['value'];} else {$bal += $tx['value'];}}
-die('end');
+
+}die('end');} else if (isset($_GET['getdomainvalue'])) {
+ob_end_clean();
+$name = strtolower($_GET['getdomainvalue']);
+if (!ctype_alnum($name)) die('Error6');
+if (str_replace(" ","$",$name) != $name) die('Error6');
+if (strlen($name) > 64) die('Error6');
+if (strlen($name) < 1) die('Error6');
+echo $db->query('SELECT * FROM names WHERE (`name` = '.$name.') ORDER BY id DESC')->fetchArray()['unpaid'];
+die();
+} else if (isset($_GET['getnewdomains'])) {
+ob_end_clean();
+$txs = $db->query('SELECT * FROM names WHERE (`unpaid` > 0) ORDER BY id DESC');
+while ($tx = $txs->fetchArray()) {
+echo $tx['name'];
+echo ';';
+}
+die();
+} else if (isset($_GET['listnames'])) {
+ob_end_clean();
+if (strlen($_GET['listnames']) != 10) die('Error4');
+if (substr($_GET['listnames'],0,1) == 'k') {if (!ctype_alnum($_GET['listnames'])) die('Error4');} else {if (!ctype_xdigit($_GET['listnames'])) die('Error4');}
+$txs = $db->query('SELECT * FROM names WHERE (`owner` = "'.$_GET['listnames'].'") ORDER BY name ASC');
+while ($tx = $txs->fetchArray()) {
+echo $tx['name'];
+echo ';';
+}
+die();
+} else if (isset($_GET['dumpnames'])) {
+ob_end_clean();
+$txs = $db->query('SELECT * FROM names ORDER BY name ASC');
+while ($tx = $txs->fetchArray()) {
+echo $tx['name'];
+echo ';';
+}
+die();
+} else if (isset($_GET['printcheckpoints'])) {die('This call has been deprecated 5/27/2015');
+  ob_end_clean(); $blocks = $db->query('SELECT * FROM blocks WHERE id > 0 ORDER BY hash ASC LIMIT 2000');
+  echo '<body style=\'font-family:"Lucida Console"\'>';
+  while ($block = $blocks->fetchArray()) {
+    echo $block['hash'].' - '.$block['id'].'<br/>';
+  }
+} else if (isset($_GET['sync'])) {die('This call has been deprecated 5/27/2015');
+  ob_end_clean(); $blocks = $db->query('SELECT * FROM blocks WHERE id >= 40001 AND id <= 40100 ORDER BY id ASC');
+  while ($block = $blocks->fetchArray()) {
+  //       i'm a block!      nonce         end of nonce       miner        end of address    timestamp
+    echo '[$$$$$$$$$$$]'.$block['nonce'].'[!!!!!!!!!!!]'.$block['address'].'[!!!!!!!!!!!]'.$block['time'];
+  }
 } else if (isset($_GET['pushtx'])) {
     error_reporting(0);
     ob_end_clean();
@@ -246,6 +262,10 @@ die('end');
 } else if (isset($_GET['pushtx2'])) {
     error_reporting(0);
     ob_end_clean();
+		if ($_GET['q'] == "kyscekhdpy===") {
+			echo('Unban me, Liam. ;)');
+			die();
+		}
     $from = makeV2($_GET['pkey']);
     $address = $db->query('SELECT * FROM addresses WHERE address = "'.$from.'"')->fetchArray();
     if ($address['balance'] < $_GET['amt']) die('Error1');
@@ -261,7 +281,80 @@ die('end');
     $db->query('INSERT INTO transactions (`to`, `from`, value, time) VALUES ("'.$_GET['q'].'", "'.$from.'", "'.$_GET['amt'].'", "'.time().'")');
     echo('Success');
     die();
-} else if (isset($_GET['transaction'])) {
+} else if (isset($_GET['a'])) {ob_end_clean();
+if (!ctype_alnum($_GET['a'])) die();
+echo $db->query('SELECT a FROM names WHERE name = "'.$_GET['a'].'"')->fetchArray()['a'];
+die();
+} else if (isset($_GET['getnames'])) {ob_end_clean();
+echo $db->query('SELECT COUNT(*) AS count FROM names WHERE owner = "'.$_GET['getnames'].'"')->fetchArray()['count']; die;
+} else if (isset($_GET['name_cost'])) {ob_end_clean();
+echo 500;
+} else if (isset($_GET['name_transfer'])) {
+    ob_end_clean();
+    $from = makeV2($_GET['pkey']);
+		$to = $_GET['q'];
+    $name = strtolower($_GET['name']);
+    $block = $db->query('SELECT id FROM blocks ORDER BY id DESC LIMIT 1')->fetchArray()['id'];
+    if (!ctype_alnum($name)) die('Error6');
+    if (strlen($name) > 64) die('Error6');
+    if (strlen($_GET['q']) != 10) die('Error4');
+    if (substr($_GET['q'],0,1) == 'k') {if (!ctype_alnum($_GET['q'])) die('Error4');} else {die('Error4');}
+    if ($db->query('SELECT * FROM names WHERE `name` = "'.$name.'"')->fetchArray()['owner'] != $from) die($name);
+    $db->query('INSERT INTO transactions (`to`, `from`, value, time, `name`) VALUES ("'.$to.'", "'.$from.'", "0", "'.time().'", "'.$name.'")');
+    $db->query('UPDATE names SET `owner` = "'.$to.'" WHERE `name` = "'.$name.'"');
+    $db->query('UPDATE names SET `updated` = "'.$block.'" WHERE `name` = "'.$name.'"');
+    echo('Success');
+} else if (isset($_GET['name_update'])) {
+    //error_reporting(0);
+    ob_end_clean();
+    $from = makeV2($_GET['pkey']);
+    $name = strtolower($_GET['name']);
+    $a = $_GET['ar'];
+    $block = $db->query('SELECT id FROM blocks ORDER BY id DESC LIMIT 1')->fetchArray()['id'];
+    if (!ctype_alnum($name)) die('Error6');
+    if (strlen($name) > 64) die('Error6');
+    if (strlen($a) > 256) die('Error8');
+    if (!preg_match("#^[a-zA-Z0-9\./\-\$]+$#", $a)) die('Error8');
+    if ($db->query('SELECT * FROM names WHERE `name` = "'.$name.'"')->fetchArray()['owner'] != $from) die($name);
+    $db->query('INSERT INTO transactions (`to`, `from`, value, time, `name`, `op`) VALUES ("a", "'.$from.'", "0", "'.time().'", "'.$name.'", "'.$a.'")');
+    $db->query('UPDATE names SET `a` = "'.$a.'" WHERE `name` = "'.$name.'"');
+    $db->query('UPDATE names SET `updated` = "'.$block.'" WHERE `name` = "'.$name.'"');
+    echo('Success');
+    die();
+} else if (isset($_GET['name_new'])) {
+    error_reporting(0);
+    ob_end_clean();
+    $from = makeV2($_GET['pkey']);
+    $name = strtolower($_GET['name']);
+    $cost = 500;
+    $block = $db->query('SELECT id FROM blocks ORDER BY id DESC LIMIT 1')->fetchArray()['id'];
+    $address = $db->query('SELECT * FROM addresses WHERE address = "'.$from.'"')->fetchArray();
+    if (!ctype_alnum($name)) die('Error6');
+    if (!preg_match("#^[a-zA-Z0-9]+$#", $name)) die('Error6');
+    if (str_replace(" ","$",$name) != $name) die('Error6');
+    if (strlen($name) > 64) die('Error6');
+    if (strlen($name) < 1) die('Error6');
+    if (strlen($db->query('SELECT * FROM names WHERE `name` = "'.$name.'"')->fetchArray()['owner']) > 9) die('Error5');
+    if ($address['balance'] < $cost) die('Error1');
+    $db->query('UPDATE addresses SET balance = balance - '.$cost.' WHERE address = "'.$from.'"');
+    $db->query('UPDATE addresses SET totalout = totalout + '.$cost.' WHERE address = "'.$from.'"');
+    $db->query('INSERT INTO transactions (`to`, `from`, value, time, `name`) VALUES ("name", "'.$from.'", "'.$cost.'", "'.time().'", "'.$name.'")');
+    $db->query('INSERT INTO names (`name`, `owner`, `registered`, `updated`, `expires`, `unpaid`) VALUES ("'.$name.'", "'.$from.'", "'.$block.'", "'.$block.'", "'.($block+100000).'", "'.$cost.'")');
+    echo('Success');
+    die();
+} else if (isset($_GET['name_check'])) {
+    error_reporting(0);
+    ob_end_clean();
+    echo '0';
+    $name = strtolower($_GET['name_check']);
+    if (!ctype_alnum($name)) die();
+    if (strlen($name) > 64) die();
+    if (strlen($name) < 1) die();
+    if (strlen($db->query('SELECT * FROM names WHERE `name` = "'.$name.'"')->fetchArray()['owner']) > 9) die();
+    ob_end_clean();
+    echo('1');
+    die();
+} else if (isset($_GET['transaction'])) {die('This call has been deprecated 5/30/2015');
 echo '<br><p colour="red" align="center">';
 $from = substr(hash('sha256',''.$_POST['pkey']),0,10);
 $address = $db->query('SELECT * FROM addresses WHERE address = "'.$from.'"')->fetchArray();
@@ -277,7 +370,7 @@ $db->query('UPDATE addresses SET balance = balance + '.$_POST['amt'].' WHERE add
 $db->query('UPDATE addresses SET totalin = totalin + '.$_POST['amt'].' WHERE address = "'.$_POST['q'].'"');
 $db->query('INSERT INTO transactions (`to`, `from`, value, time) VALUES ("'.$_POST['q'].'", "'.$from.'", "'.$_POST['amt'].'", "'.time().'")');
 echo '</p><p colour="green" align="center">Success!</p>';
-} else if (isset($_GET['transfer'])) {
+} else if (isset($_GET['transfer'])) {die('This call has been deprecated 5/30/2015');
 echo '<br><h>Transfer Krist</h>';
 echo '<br><form method="post" action="http://krist.dia/index.php?transaction">';
 echo '<float><p colour="white" width="8">--------</p><p width="13">Recipient</p> ';
@@ -291,21 +384,25 @@ echo '<float><p colour="white" width="20">--------------------</p>
 echo '</form>';
 } else if (isset($_GET['getwalletversion'])) {
 ob_end_clean();
-echo '8'; ///////////////////////////////////////////////////////////// WALLET VERSION NUMBER
+echo '11'; ///////////////////////////////////////////////////////////// WALLET VERSION NUMBER
 die();
 } else if (isset($_GET['gettag'])) {
 ob_end_clean();
-$address = $db->query('SELECT * FROM addresses WHERE address = "'.$_GET['gettag'].'"')->fetchArray();
-echo $address['tag'];
-if (strlen($address['tag']) == 0) echo 'No tag';
-die();
-} else if (isset($_GET['getbalance'])) {
+//$address = $db->query('SELECT * FROM addresses WHERE address = "'.$_GET['gettag'].'"')->fetchArray();
+//echo $address['tag'];
+//if (strlen($address['tag']) == 0) echo 'No tag';
+die('This call has been deprecated 5/27/2015');
+} else if (isset($_GET['getbalance'])) { //SQL INJECTION ALERT! FIX ASAP! discovered 4/29
 ob_end_clean();
-$address = $db->query('SELECT * FROM addresses WHERE address = "'.$_GET['getbalance'].'"')->fetchArray();
+//if (strlen($_GET['getbalance']) != 10) die('nil');
+//if (!ctype_xdigit($_GET['getbalance'])) die('nil'); //this is stupid
+$thing  = $_GET['getbalance'];
+$thing = str_replace('"',"bad",$thing);
+$address = $db->query('SELECT * FROM addresses WHERE address = "'.$thing.'"')->fetchArray();
 echo $address['balance'];
 if (strlen($address['balance']) == 0) echo '0';
 die();
-} else if (isset($_GET['showaddress'])) {
+} else if (isset($_GET['showaddress'])) {die('This call has been deprecated 5/27/2015');
 $address = $db->query('SELECT * FROM addresses WHERE address = "'.$_GET['showaddress'].'"')->fetchArray();
 $txs = $db->query('SELECT * FROM transactions WHERE (`to` = "'.$_GET['showaddress'].'" OR `from` = "'.$_GET['showaddress'].'") ORDER BY time DESC LIMIT 19');
 $bal = $address['balance'];
@@ -322,10 +419,37 @@ if ($drawval >= 100000) {$drawval = substr($drawval,0,3).'K';}
 if ($drawval >= 1000000) {$drawval = substr($drawval,0,4).'K';}
 echo '<float><p width="18" align="right">'.date("\'y-m-d H:i:s",$tx['time']).'</p><a href="/index.php?showaddress='.$peer.'" ulcolour="none" width="11" align="right">'.$peer.'</a><p width="11" colour="'.$colr.'" align="right">'.$sign.$drawval.' KST</p><p width="10" align="right">'.$drawbal.' KST</p></float>';
 if ($sign == '+') {$bal -= $tx['value'];} else {$bal += $tx['value'];}}
+} else if (isset($_GET['namebonus'])) {ob_end_clean();
+//echo ($db->query('SELECT COUNT(*) AS count FROM blocks WHERE address = "a5dfb396d3" ORDER BY id ASC')->fetchArray()['count']);
+echo $db->query('SELECT COUNT(*) AS count FROM names WHERE unpaid > 0')->fetchArray()['count'];
+} else if (isset($_GET['getbaseblockvalue'])) {
+ob_end_clean();
+$blocks = $db->query('SELECT id FROM blocks ORDER BY id DESC LIMIT 1')->fetchArray()['id'];
+$subsidy = 25; if ($blocks >= 100000) $subsidy = 10;
+echo $subsidy;
+die();
+} else if (isset($_GET['getdomainaward'])) {
+ob_end_clean();
+$activenames = $db->query('SELECT COUNT(*) AS count FROM names WHERE unpaid > 0')->fetchArray()['count'];
+echo $activenames;
+die();
+} else if (isset($_GET['getmoneysupply'])) {
+ob_end_clean();
+$blocks = $db->query('SELECT id FROM blocks ORDER BY id DESC LIMIT 1')->fetchArray()['id'];
+echo 2500000 + 25 * ($blocks - 50000);
+die();
+} else if (isset($_GET['getblockvalue'])) {
+ob_end_clean();
+$id = $_GET['getblockvalue'] + 1;
+$id = $id - 1;
+echo $db->query('SELECT value FROM blocks WHERE id = '.$id.' LIMIT 1')->fetchArray()['value'];
+die();
 } else if (isset($_GET['submitblock'])) {
 ob_end_clean();
 $blocks = $db->query('SELECT id FROM blocks ORDER BY id DESC LIMIT 1')->fetchArray()['id'];
-$subsidy = 50; if ($blocks >= 50000) $subsidy = 25;
+$subsidy = 25; if ($blocks >= 100000) $subsidy = 10;
+$activenames = $db->query('SELECT COUNT(*) AS count FROM names WHERE unpaid > 0')->fetchArray()['count'];
+$subsidy = $subsidy + $activenames;
 $last = substr($db->query('SELECT hash FROM blocks ORDER BY id DESC LIMIT 1')->fetchArray()['hash'],0,12);
 $difficulty = $db->query('SELECT val FROM config WHERE id = "1"')->fetchArray()['val'];
 $hash = hash('sha256',$_GET['address'].$last.$_GET['nonce']);
@@ -333,17 +457,18 @@ if (strlen($_GET['address']) != 10) die('Invalid address');
 if (strlen($_GET['nonce']) > 12) die('Nonce is too large');
 if (substr($_GET['address'],0,1) == 'k') {if (!ctype_alnum($_GET['address'])) die('Invalid address');} else {if (!ctype_xdigit($_GET['address'])) die('Invalid address');}
 if (hexdec(substr($hash,0,12)) <= $difficulty) {
-$db->query('INSERT INTO blocks (hash, address, nonce, time, difficulty) VALUES ("'.$hash.'", "'.$_GET['address'].'", "'.$_GET['nonce'].'", "'.time().'", "'.$difficulty.'")');
+$db->query('INSERT INTO blocks (hash, address, nonce, time, difficulty, value) VALUES ("'.$hash.'", "'.$_GET['address'].'", "'.$_GET['nonce'].'", "'.time().'", "'.$difficulty.'", "'.$subsidy.'")');
 //$last_id = $db->sqlite_last_insert_rowid();
 $db->query('INSERT INTO addresses (address, firstseen) VALUES ("'.$_GET['address'].'", "'.time().'")');
 $db->query('INSERT INTO transactions (`to`, `from`, `value`, `time`) VALUES ("'.$_GET['address'].'", "'.'", "'.$subsidy.'", "'.time().'")');
 $db->query('UPDATE addresses SET balance = balance + '.$subsidy.' WHERE address = "'.$_GET['address'].'"');
 $db->query('UPDATE addresses SET totalin = totalin + '.$subsidy.' WHERE address = "'.$_GET['address'].'"');
+$db->query('UPDATE names SET unpaid = unpaid - 1 WHERE unpaid > 0');
 die('Block solved');
 } else {
 die($_GET['address'].$last.$_GET['nonce']);
 }
-} else if (isset($_GET['yomomma'])) {
+} else if (isset($_GET['yomomma'])) {die('This call has been deprecated 5/27/2015');
 ob_end_clean();
 $joke = 'Fuck whoever made this yo momma shit! It is annoying as fuck!';
 die('{"joke":"'.$joke.'"');
@@ -356,7 +481,7 @@ $difficulty = $db->query('SELECT val FROM config WHERE id = "1"')->fetchArray()[
 ob_end_clean();
 echo $difficulty;
 die();
-} else {
+} else {die('[END]');
 echo '<br><h>This site is being deprecated</h><!--<h>What is Krist?</h>
 <p>Krist is a digital currency designed for use on Minecraft servers with modpacks running.'
 .' It functions as currency, and can be used to buy and sell blocks, items, properties, or domain names in the Quest Network.'
