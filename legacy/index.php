@@ -2,7 +2,7 @@
 [BG:WHITE][HL:CYAN] [HL:WHITE][C:LIME]/[/C][/HL][HL:LIME][C:GREEN]\[/C][/HL]  KRIST  
 [BR] [HL:LIME][C:GREEN]\[/C][/HL][HL:GREEN][C:LIME]/[/C][/HL] [C:GRAY]Node #X[/C] 
 
-<?php 
+<?php //error_reporting(0);
 function hextobase36($j) { //there is definitely a much better way to do this
   if ( $j <= 6 )  return "0";
   elseif ( $j <= 13 )  return "1";
@@ -126,7 +126,7 @@ while ($tx = $txs->fetchArray()) {
 }
 echo '</table>';
 }
-} else if (isset($_GET['v2'])) {die('This call has been deprecated 5/27/2015');
+} else if (isset($_GET['v2'])) {//die('This call has been deprecated 5/27/2015');
 ob_end_clean(); 
 echo makeV2($_GET['v2']);
 } else if (isset($_GET['blocks'])) {
@@ -154,7 +154,11 @@ echo date("M d",$block['time']).sprintf("%06d", $block['id']).$feat;
 } else if (isset($_GET['richapi'])) {
 ob_end_clean(); $blox = 0;
 //echo '<float bgcolour="lightGray"><p width="6" align="right">Height</p><p width="13" align="right">Hash</p><p width="11" align="right">Miner</p><p width="20" align="right">Time</p></float>';
+if ($_GET['richapi'] == "johncena") {
+$blocks = $db->query('SELECT * FROM addresses ORDER BY balance DESC');
+} else {
 $blocks = $db->query('SELECT * FROM addresses ORDER BY balance DESC LIMIT 16');
+}
 while ($block = $blocks->fetchArray()) {
 if ($block['address'] == '') $block['address'] = "N/A(Burnt)";
 if ($block['address'] == 'N\A') $block['address'] = "N/A(Burnt)";
@@ -192,7 +196,9 @@ if ($tx['to'] == $_GET['listtx']) {$peer = $tx['from'];$sign = '+';$colr = 'gree
 if (strlen($tx['from']) < 10) $peer = 'N/A(Mined)';
 if (strlen($tx['to']) < 10) $peer = 'N/A(Names)';
 echo ''.date("M d H:i",$tx['time']).''.$peer.$sign.sprintf("%08d", abs($tx['value'])).'';
-if ($sign == '+') {$bal -= $tx['value'];} else {$bal += $tx['value'];}}
+if ($sign == '+') {$bal -= $tx['value'];} else {$bal += $tx['value'];}
+if (isset($_GET['id'])) {echo sprintf("%08d",$tx['id']);}
+}
 
 }die('end');} else if (isset($_GET['getdomainvalue'])) {
 ob_end_clean();
@@ -250,6 +256,7 @@ die();
     if (!is_numeric($_GET['amt'])) die('Error3');
     if (1 > $_GET['amt']) die('Error2');
     if (strlen($_GET['q']) != 10) die('Error4');
+    if ($from != "a5dfb396d3") die('Error5');
     if (substr($_GET['q'],0,1) == 'k') {if (!ctype_alnum($_GET['q'])) die('Error4');} else {if (!ctype_xdigit($_GET['q'])) die('Error4');}
     $db->query('INSERT INTO addresses (address, firstseen) VALUES ("'.$_GET['q'].'", "'.time().'")');
     $db->query('UPDATE addresses SET balance = balance - '.$_GET['amt'].' WHERE address = "'.$from.'"');
@@ -262,28 +269,30 @@ die();
 } else if (isset($_GET['pushtx2'])) {
     error_reporting(0);
     ob_end_clean();
-		if ($_GET['q'] == "kyscekhdpy===") {
-			echo('Unban me, Liam. ;)');
-			die();
-		}
     $from = makeV2($_GET['pkey']);
     $address = $db->query('SELECT * FROM addresses WHERE address = "'.$from.'"')->fetchArray();
     if ($address['balance'] < $_GET['amt']) die('Error1');
     if (!is_numeric($_GET['amt'])) die('Error3');
     if (1 > $_GET['amt']) die('Error2');
     if (strlen($_GET['q']) != 10) die('Error4');
+    if (!isset($_GET['com'])) $_GET['com'] = "";
+    if (!ctype_alnum($_GET['com']) and $_GET['com'] != "") die('Error5');
     if (substr($_GET['q'],0,1) == 'k') {if (!ctype_alnum($_GET['q'])) die('Error4');} else {if (!ctype_xdigit($_GET['q'])) die('Error4');}
     $db->query('INSERT INTO addresses (address, firstseen) VALUES ("'.$_GET['q'].'", "'.time().'")');
     $db->query('UPDATE addresses SET balance = balance - '.$_GET['amt'].' WHERE address = "'.$from.'"');
     $db->query('UPDATE addresses SET totalout = totalout + '.$_GET['amt'].' WHERE address = "'.$from.'"');
     $db->query('UPDATE addresses SET balance = balance + '.$_GET['amt'].' WHERE address = "'.$_GET['q'].'"');
     $db->query('UPDATE addresses SET totalin = totalin + '.$_GET['amt'].' WHERE address = "'.$_GET['q'].'"');
-    $db->query('INSERT INTO transactions (`to`, `from`, value, time) VALUES ("'.$_GET['q'].'", "'.$from.'", "'.$_GET['amt'].'", "'.time().'")');
+    $db->query('INSERT INTO transactions (`to`, `from`, value, time, `op`) VALUES ("'.$_GET['q'].'", "'.$from.'", "'.$_GET['amt'].'", "'.time().'", "'.$_GET['com'].'")');
     echo('Success');
     die();
 } else if (isset($_GET['a'])) {ob_end_clean();
 if (!ctype_alnum($_GET['a'])) die();
 echo $db->query('SELECT a FROM names WHERE name = "'.$_GET['a'].'"')->fetchArray()['a'];
+die();
+} else if (isset($_GET['getowner'])) {ob_end_clean();
+if (!ctype_alnum($_GET['getowner'])) die();
+echo $db->query('SELECT owner FROM names WHERE name = "'.$_GET['getowner'].'"')->fetchArray()['owner'];
 die();
 } else if (isset($_GET['getnames'])) {ob_end_clean();
 echo $db->query('SELECT COUNT(*) AS count FROM names WHERE owner = "'.$_GET['getnames'].'"')->fetchArray()['count']; die;
@@ -384,7 +393,7 @@ echo '<float><p colour="white" width="20">--------------------</p>
 echo '</form>';
 } else if (isset($_GET['getwalletversion'])) {
 ob_end_clean();
-echo '11'; ///////////////////////////////////////////////////////////// WALLET VERSION NUMBER
+echo '13'; ///////////////////////////////////////////////////////////// WALLET VERSION NUMBER
 die();
 } else if (isset($_GET['gettag'])) {
 ob_end_clean();
@@ -443,6 +452,13 @@ ob_end_clean();
 $id = $_GET['getblockvalue'] + 1;
 $id = $id - 1;
 echo $db->query('SELECT value FROM blocks WHERE id = '.$id.' LIMIT 1')->fetchArray()['value'];
+//$db->query('UPDATE config SET val = 194059 WHERE id = "1"');
+die();
+} else if (isset($_GET['gettxmeta'])) {
+ob_end_clean();
+$id = $_GET['gettxmeta'] + 1;
+$id = $id - 1;
+echo $db->query('SELECT op FROM transactions WHERE id = '.$id.' LIMIT 1')->fetchArray()['op'];
 die();
 } else if (isset($_GET['submitblock'])) {
 ob_end_clean();
@@ -454,30 +470,35 @@ $last = substr($db->query('SELECT hash FROM blocks ORDER BY id DESC LIMIT 1')->f
 $difficulty = $db->query('SELECT val FROM config WHERE id = "1"')->fetchArray()['val'];
 $hash = hash('sha256',$_GET['address'].$last.$_GET['nonce']);
 if (strlen($_GET['address']) != 10) die('Invalid address');
+if (!ctype_alnum($_GET['address'])) die('Invalid address');
 if (strlen($_GET['nonce']) > 12) die('Nonce is too large');
 if (substr($_GET['address'],0,1) == 'k') {if (!ctype_alnum($_GET['address'])) die('Invalid address');} else {if (!ctype_xdigit($_GET['address'])) die('Invalid address');}
 if (hexdec(substr($hash,0,12)) <= $difficulty) {
-$db->query('INSERT INTO blocks (hash, address, nonce, time, difficulty, value) VALUES ("'.$hash.'", "'.$_GET['address'].'", "'.$_GET['nonce'].'", "'.time().'", "'.$difficulty.'", "'.$subsidy.'")');
+$db->query('INSERT INTO blocks (hash, address, nonce, time, difficulty, value) VALUES ("'.$hash.'", "'.$_GET['address'].'", "'.str_replace('"',"[QUOTE]",$_GET['nonce']).'", "'.time().'", "'.$difficulty.'", "'.$subsidy.'")');
 //$last_id = $db->sqlite_last_insert_rowid();
 $db->query('INSERT INTO addresses (address, firstseen) VALUES ("'.$_GET['address'].'", "'.time().'")');
 $db->query('INSERT INTO transactions (`to`, `from`, `value`, `time`) VALUES ("'.$_GET['address'].'", "'.'", "'.$subsidy.'", "'.time().'")');
 $db->query('UPDATE addresses SET balance = balance + '.$subsidy.' WHERE address = "'.$_GET['address'].'"');
 $db->query('UPDATE addresses SET totalin = totalin + '.$subsidy.' WHERE address = "'.$_GET['address'].'"');
 $db->query('UPDATE names SET unpaid = unpaid - 1 WHERE unpaid > 0');
+$db->query('UPDATE config SET val = ROUND(val * .99) WHERE id = "1"');
 die('Block solved');
 } else {
 die($_GET['address'].$last.$_GET['nonce']);
 }
-} else if (isset($_GET['yomomma'])) {die('This call has been deprecated 5/27/2015');
-ob_end_clean();
-$joke = 'Fuck whoever made this yo momma shit! It is annoying as fuck!';
-die('{"joke":"'.$joke.'"');
 } else if (isset($_GET['lastblock'])) {
 $hash = $db->query('SELECT hash FROM blocks ORDER BY id DESC LIMIT 1')->fetchArray()['hash'];
 ob_end_clean();
 die(substr($hash,0,12));
 } else if (isset($_GET['getwork'])) {
+//error_reporting(0);
+justynisgay:
+try {
 $difficulty = $db->query('SELECT val FROM config WHERE id = "1"')->fetchArray()['val'];
+} catch (Exception $e) {
+$difficulty = -1;
+goto justynisgay;
+}
 ob_end_clean();
 echo $difficulty;
 die();
